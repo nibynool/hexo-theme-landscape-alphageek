@@ -1,0 +1,135 @@
+<%
+let displayObject = function(obj, parent) {
+  let output = '';
+  if (typeof obj === 'object') {
+    output += '<dl>';
+    for (let key in obj)
+    {
+      if (obj.hasOwnProperty(key))
+      {
+        if (obj[key] instanceof moment)
+        {
+          output += '<dt><code>' + parent + '.' + key + '</code> (moment)' + '</dt>';
+          output += '<dd>' + obj[key].toString() + '</dd>';
+        }
+        else
+        {
+          output += '<dt><code>' + parent + '.' + key + '</code> (' + (typeof obj[key]) + ')' + '</dt>';
+          output += '<dd>' + displayObject(obj[key], parent + '.' + key) + '</dd>';
+        }
+      }
+    }
+    output += '</dl>';
+  } else {
+    output = obj;
+  }
+
+  return output;
+}
+%>
+<article id="<%= post.layout %>-<%= post.slug %>" class="h-entry article article-type-<%= post.layout %>" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <%- partial('post/date', {class_name: 'article-date', date_format: null}) %>
+    <%- partial('post/category') %>
+  </div>
+  <div class="article-inner">
+    <%- partial('post/gallery') %>
+    <% if (post.link || post.title){ %>
+      <header class="article-header">
+        <%- partial('post/title', {class_name: 'p-name article-title'}) %>
+      </header>
+    <% } %>
+    <% if (index === false){ %>
+      <div class="e-content article-entry" itemprop="articleBody">
+        Post data overridden by the contents of the badge and accessible through the <code>post</code> object.
+      </div>
+      <div class="e-content article-entry">
+        <dl>
+          <dt><code>post.date</code> (moment)</dt>
+          <dd>
+            <em>Extracted from the <code>issuedOn</code> field of the badge if it exists</em><br />
+            <%= post.date.toString() %>
+          </dd>
+          <dt><code>post.updated</code> (moment)</dt>
+          <dd>
+            <em>Extracted from the <code>issuedOn</code> field of the badge if it exists</em><br />
+            <%= post.updated.toString() %>
+          </dd>
+          <dt><code>post.title</code> (string)</dt>
+          <dd>
+            <em>The name of the badge</em><br />
+            <%= post.title %>
+          </dd>
+          <dt><code>post.photos[]</code> (string)</dt>
+          <dd>
+            <em>URL of the badge image is added to the post's photos array</em><br />
+            <%= post.photos[0] %>
+          </dd>
+          <dt><code>post.photo</code> (string)</dt>
+          <dd>
+            <em>URL of the badge image</em><br />
+            <%= post.photo %>
+          </dd>
+          <dt><code>post.description</code> (string)</dt>
+          <dd>
+            <em>Extracted from the badge description</em><br />
+            <%= post.description %>
+          </dd>
+          <dt><code>post.verify</code> (string)</dt>
+          <dd>
+            <em>URL to be used for badge verification</em><br />
+            <%= post.verify %>
+          </dd>
+        </dl>
+      </div>
+      <div class="e-content article-entry" itemprop="articleBody">
+        Data extracted from the Open Badge and accessible through the <code>post.badge</code> object.
+      </div>
+      <div class="e-content article-entry">
+        <%- displayObject(post.badge, 'post.badge') %>
+      </div>
+    <% } else { %>
+      <div class="e-content article-entry" itemprop="articleBody">
+        <% if (post.excerpt && index){ %>
+          <%- post.excerpt %>
+          <% if (theme.excerpt_link){ %>
+            <p class="article-more-link">
+              <a href="<%- url_for(post.path) %>#more"><%= theme.excerpt_link %></a>
+            </p>
+          <% } %>
+        <% } else { %>
+          <%- post.content %>
+        <% } %>
+      </div>
+    <% } %>
+    <footer class="article-footer">
+      <a data-url="<%- post.permalink %>" data-id="<%= post._id %>" data-title="<%= post.title %>" class="article-share-link"><%= __('share') %></a>
+      <% if (post.comments && config.disqus_shortname){ %>
+        <a href="<%- post.permalink %>#disqus_thread" class="article-comment-link"><%= __('comment') %></a>
+      <% } %>
+      <% if (post.comments && theme.valine.enable && theme.valine.appId && theme.valine.appKey ){ %>
+        <a href="<%- url_for(post.path) %>#comments" class="article-comment-link">
+          <span class="post-comments-count valine-comment-count" data-xid="<%- url_for(post.path) %>" itemprop="commentCount"></span>
+          <%= __('comment') %>
+        </a>
+      <% } %>
+      <%- partial('post/tag') %>
+    </footer>
+  </div>
+  <% if (!index){ %>
+    <%- partial('post/nav') %>
+  <% } %>
+</article>
+
+<% if (!index && post.comments && config.disqus_shortname){ %>
+<section id="comments">
+  <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  </div>
+</section>
+<% } %>
+<% if (!index && post.comments && theme.valine.enable && theme.valine.appId && theme.valine.appKey){ %>
+  <section id="comments" class="vcomment">
+
+  </section>
+<% } %>

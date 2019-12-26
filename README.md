@@ -6,6 +6,7 @@ A custom version of the [default theme](https://github.com/hexojs/hexo-theme-lan
 
 * Removed default menu options
 * Added ability to use raw HTML in menu items
+* Added `openbadge` custom post type to display Open Badge data
 
 ## Purpose
 
