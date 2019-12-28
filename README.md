@@ -12,3 +12,9 @@ A custom version of the [default theme](https://github.com/hexojs/hexo-theme-lan
 
 This theme was created to enable showcasing of custom plugins for Hexo, whilst providing the ability to link back to a
 primary site and a plugin specific page.
+
+## Installation
+
+1. Fork this repository
+2. Clone into your Hexo project in the `themes/landscape-alphageek` directory
+3. Update `_config.yml`, changing the `theme:` line to `theme: landscape-alphageek`
