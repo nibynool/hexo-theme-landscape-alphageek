@@ -1,5 +1,7 @@
 {
   "name": "@nibynool/hexo-theme-landscape-alphageek",
+  "homepage": "https://software.alphageek.com.au/hexo/theme-landscape-alphageek",
   "version": "0.0.2",
-  "private": true
+  "private": true,
+  "license": "MIT"
 }
